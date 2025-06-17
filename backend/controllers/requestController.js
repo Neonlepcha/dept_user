@@ -1,10 +1,9 @@
 const Request = require("../models/Request");
 
+// ✅ CREATE
 const createRequest = async (req, res) => {
   try {
     const { name, email, item, quantity, reason } = req.body;
-
-    // ✅ Save the uploaded file’s path OR null
     const document = req.file ? req.file.filename : null;
 
     const newRequest = new Request({
@@ -28,6 +27,7 @@ const createRequest = async (req, res) => {
   }
 };
 
+// ✅ READ
 const getAllRequests = async (req, res) => {
   try {
     const requests = await Request.find().sort({ createdAt: -1 });
@@ -38,6 +38,7 @@ const getAllRequests = async (req, res) => {
   }
 };
 
+// ✅ DELETE
 const deleteRequest = async (req, res) => {
   try {
     const deleted = await Request.findByIdAndDelete(req.params.id);
@@ -51,8 +52,48 @@ const deleteRequest = async (req, res) => {
   }
 };
 
+// ✅ UPDATE — NEW
+const updateRequest = async (req, res) => {
+  try {
+    const { name, email, item, quantity, reason } = req.body;
+
+    const updateData = {
+      name,
+      email,
+      item,
+      quantity,
+      reason,
+    };
+
+    if (req.file) {
+      updateData.document = req.file.filename;
+    }
+
+    const updated = await Request.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      { new: true }  // returns the updated doc
+    );
+
+    if (!updated) {
+      return res.status(404).json({ error: "Request not found" });
+    }
+
+    res.status(200).json({
+      message: "Request updated successfully",
+      request: updated,
+    });
+
+  } catch (err) {
+    console.error("❌ Failed to update request:", err);
+    res.status(500).json({ error: "Failed to update request" });
+  }
+};
+
+// ✅ Export all controllers
 module.exports = {
   createRequest,
   getAllRequests,
   deleteRequest,
+  updateRequest, // <-- ✅ added
 };
