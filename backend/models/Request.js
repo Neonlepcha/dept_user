@@ -1,21 +1,3 @@
-// const requestSchema = new mongoose.Schema({
-//   name: String,
-//   email: String,
-//   items: [
-//     {
-//       name: String,
-//       category: String,
-//       quantity: Number,
-//       cost: Number
-//     }
-//   ],
-//   reason: String,
-//   status: {
-//     type: String,
-//     default: "Pending"
-//   }
-// }, { timestamps: true });
-/////////////
 const mongoose = require("mongoose");
 
 const requestSchema = new mongoose.Schema({
@@ -24,6 +6,7 @@ const requestSchema = new mongoose.Schema({
   item: String,
   quantity: Number,
   reason: String,
+  document: String, // ✅ NEW FIELD to store file name or path
   status: {
     type: String,
     default: "Pending"

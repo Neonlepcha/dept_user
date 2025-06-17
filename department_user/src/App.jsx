@@ -11,7 +11,7 @@ const App = () => {
     <Router>
       <div className="flex flex-col min-h-screen">
         <Navbar />
-        
+
         {/* Main content */}
         <main className="flex-grow">
           <Routes>
@@ -20,7 +20,7 @@ const App = () => {
             <Route path="/status" element={<StatusPage />} />
           </Routes>
         </main>
-        
+
         <Footer />
       </div>
     </Router>

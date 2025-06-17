@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "../api/axios";
-import { User, Mail, Package, Hash, MessageSquare } from "lucide-react";
+import { User, Mail, Package, Hash, MessageSquare, File } from "lucide-react";
 
 const RequestPage = () => {
   const [form, setForm] = useState({
@@ -10,17 +10,38 @@ const RequestPage = () => {
     quantity: "",
     reason: ""
   });
+  const [file, setFile] = useState(null); // New state for file
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]); // Store selected file
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/requests", form);
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("email", form.email);
+      formData.append("item", form.item);
+      formData.append("quantity", form.quantity);
+      formData.append("reason", form.reason);
+      if (file) {
+        formData.append("document", file);
+      }
+
+      await axios.post("/requests", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       alert("✅ Request submitted successfully.");
       setForm({ name: "", email: "", item: "", quantity: "", reason: "" });
+      setFile(null);
     } catch (err) {
       console.error("Error submitting request:", err);
       alert("❌ Failed to submit request.");
@@ -99,6 +120,18 @@ const RequestPage = () => {
             required
             rows="4"
             className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm resize-none focus:outline-none focus:ring-2 focus:ring-violet-500"
+          />
+        </div>
+
+        {/* Document Upload */}
+        <div className="relative">
+          <File className="absolute left-3 top-3 text-gray-400" size={20} />
+          <input
+            type="file"
+            accept=".jpg,.jpeg,.png,.pdf"
+            onChange={handleFileChange}
+            required
+            className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100 focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
         </div>
 

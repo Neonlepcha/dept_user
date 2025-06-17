@@ -14,7 +14,9 @@ const StatusPage = () => {
   };
 
   const handleCancel = async (id) => {
-    const confirmCancel = window.confirm("Are you sure you want to cancel this request?");
+    const confirmCancel = window.confirm(
+      "Are you sure you want to cancel this request?"
+    );
     if (!confirmCancel) return;
 
     try {
@@ -33,7 +35,9 @@ const StatusPage = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-6 p-4">
-      <h2 className="text-2xl font-bold mb-4 text-purple-700">Request Status</h2>
+      <h2 className="text-2xl font-bold mb-4 text-purple-700">
+        Request Status
+      </h2>
       {requests.length === 0 ? (
         <p>No requests found</p>
       ) : (
@@ -42,13 +46,32 @@ const StatusPage = () => {
             <h3 className="text-lg font-bold text-indigo-700">
               #{idx + 1} - {r.item}
             </h3>
-            <p>Requested by: <strong>{r.name}</strong> ({r.email})</p>
+            <p>
+              Requested by: <strong>{r.name}</strong> ({r.email})
+            </p>
             <p>Quantity: {r.quantity}</p>
             <p>Reason: {r.reason}</p>
-            <p>Status: <strong>{r.status}</strong></p>
+            <p>
+              Status: <strong>{r.status}</strong>
+            </p>
+
+            {/* ✅ Show document link if uploaded */}
+            {r.document && (
+              <a
+                href={`${
+                  import.meta.env.VITE_BACKEND_URL || "http://localhost:5000"
+                }/uploads/${r.document}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block px-4 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
+              >
+                View Document
+              </a>
+            )}
+
             <button
               onClick={() => handleCancel(r._id)}
-              className="mt-3 px-4 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+              className="mt-3 ml-2 px-4 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
             >
               Cancel Request
             </button>
